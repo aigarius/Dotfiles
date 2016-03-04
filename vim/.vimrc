@@ -62,6 +62,7 @@ Plug 'vim-scripts/SQLUtilities'
 Plug 'vim-scripts/gitignore'
 Plug 'vim-utils/vim-husk'
 Plug 'wellle/targets.vim'
+Plug 'Glench/Vim-Jinja2-Syntax'
 
 " Required by vim-plug.
 call plug#end()
@@ -131,13 +132,14 @@ nmap <silent> n n:call HighlightNext(0.2)<CR>
 nmap <silent> N N:call HighlightNext(0.2)<CR>
 
 " Set line-numbers to start from 0 based on current position.
-set relativenumber
+" set relativenumber
 
 try
     set cryptmethod=blowfish2
 catch
     set cryptmethod=blowfish
 endtry
+
 
 " Minimal number of screen lines to keep above and below the cursor.
 set scrolloff=0
@@ -342,7 +344,7 @@ au BufReadPre * call AuBufReadPre()
 
 func! AuBufReadPost()
     if has('gui_running')
-        setlocal colorcolumn=100
+        setlocal colorcolumn=120
 
         if &ft == "gitcommit"
             setlocal colorcolumn=50
@@ -508,10 +510,10 @@ if has('gui_running')
     " colorscheme flatlandia
 
     " Removes all GUI stuff.
-    set guioptions=c
+    " set guioptions=c
 
     " Sets font.
-    set guifont=Inconsolata-g\ for\ Powerline\ Medium\ 9
+    " set guifont=Inconsolata-g\ for\ Powerline\ Medium\ 9
 
     " Blink faster!
     set guicursor+=n-v-c:blinkon200
@@ -528,12 +530,12 @@ if ! has("gui_running")
 endif
 
 " Fine-tune tabline.
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#show_tabs = 1
-let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#formatter = "unique_tail_improved"
-let g:airline#extensions#tabline#show_close_button = 0
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#show_buffers = 0
+"let g:airline#extensions#tabline#show_tabs = 1
+"let g:airline#extensions#tabline#tab_nr_type = 1
+"let g:airline#extensions#tabline#formatter = "unique_tail_improved"
+"let g:airline#extensions#tabline#show_close_button = 0
 let g:airline_left_sep = ""
 let g:airline_right_sep = ""
 
@@ -547,18 +549,30 @@ nmap // :<C-r>/'<C-a>Ack<Space>'<Left>
 " Syntastic configuration.
 "
 
+" Executes Syntastic when buffer is opened.
+let g:syntastic_check_on_open = 1
+
+" Allows to use `:lnext` and `:lprevious` to move around Syntastic errors.
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 1
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_python_python_exec = '/usr/bin/python3'
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
-let g:syntastic_python_checkers = ["python", "frosted"]
-let g:syntastic_python_python_exec = "python2"
+" Linters for Python files.
+let g:syntastic_python_checkers = ['python', 'pep8', 'pyflakes']
+let g:syntastic_python_pep8_post_args = '--max-line-length=119'
 
-let g:syntastic_coffee_checkers = ["coffee", "coffeelint"]
-let g:syntastic_coffee_coffeelint_post_args = "--file ~/coffeelint.json"
+" Conf for CoffeeScript files.
+let g:syntastic_coffee_checkers = ['coffee', 'coffeelint']
+let g:syntastic_coffee_coffeelint_post_args = '--file ~/coffeelint.json'
 
-let g:syntastic_javascript_checkers = ["eslint"]
+" Conf for shell files.
+let g:syntastic_coffee_checkers = ['sh', 'shellcheck']
 
 "
 " NERDTree configuration.
@@ -572,6 +586,8 @@ let NERDTreeWinSize = 50
 
 " Makes NERDTree show hidden files as well.
 let NERDTreeShowHidden = 1
+
+let NERDTreeIgnore = ['\.pyc$', '__pycache__$', '\.git$', '\.egg-info$']
 
 "
 " Gist configuration.
@@ -743,3 +759,9 @@ let g:gutentags_exclude = [
 
 map y <Plug>(operator-flashy)
 nmap Y <Plug>(operator-flashy)$
+
+
+" Map convinient save
+nmap <F2> :update<CR>
+vmap <F2> <Esc><F2>
+imap <F2> <c-o><F2>
