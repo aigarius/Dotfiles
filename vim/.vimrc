@@ -40,6 +40,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'plasticboy/vim-markdown'
 Plug 'rhysd/devdocs.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
 Plug 'scrooloose/syntastic'
 Plug 'sjl/gundo.vim'
 Plug 'suan/vim-instant-markdown'
@@ -229,14 +230,6 @@ cmap <C-t> <C-a>tabe \| <C-e>
 " Auto-closes that window when using q: instead of :q for mistake.
 map q: :q
 
-" Jump to next/previous class.
-nmap <Home> [[zz
-nmap <End> ]]zz
-
-" Jump to next/previous function.
-nmap <PageUp> [mzz
-nmap <PageDown> ]mzz
-
 " Always go to exact position of the mark.
 nmap ' `
 
@@ -279,6 +272,9 @@ au filetype clojure setlocal makeprg=lein\ exec\ %
 au filetype html,htmldjango,css,scss,sass,javascript,coffee,sh,gitcommit setlocal iskeyword+=-
 
 au filetype man setlocal nowrap
+
+" Deletes all trailing whitespace on save.
+autocmd BufWritePre * :%s/\s\+$//e
 
 func! AuFtMarkdown()
     setlocal spell
@@ -557,15 +553,17 @@ let g:syntastic_always_populate_loc_list = 1
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-let g:syntastic_python_python_exec = '/usr/bin/python3'
+let g:syntastic_python_python_exec = '~/env/bin/python3'
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 " Linters for Python files.
-let g:syntastic_python_checkers = ['python', 'pep8', 'pyflakes']
+let g:syntastic_python_checkers = ['python', 'pep8', 'pylint']
 let g:syntastic_python_pep8_post_args = '--max-line-length=119'
+let g:syntastic_python_pylint_exe = '~/env/bin/pylint'
+let g:syntastic_python_pylint_post_args = '--rcfile=~/pylint.cfg'
 
 " Conf for CoffeeScript files.
 let g:syntastic_coffee_checkers = ['coffee', 'coffeelint']
@@ -579,7 +577,7 @@ let g:syntastic_coffee_checkers = ['sh', 'shellcheck']
 "
 
 " Opens NERDTree with <Tab>.
-nmap <Tab> :NERDTreeToggle<CR>
+nmap <Tab> :NERDTreeTabsToggle<CR>
 
 " Makes NERDTree more wider.
 let NERDTreeWinSize = 50
