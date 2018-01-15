@@ -540,6 +540,9 @@ let g:airline_right_sep = ""
 "
 
 nmap // :<C-r>/'<C-a>Ack<Space>'<Left>
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 "
 " Syntastic configuration.
@@ -560,7 +563,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 " Linters for Python files.
-let g:syntastic_python_checkers = ['python', 'pep8', 'pylint']
+let g:syntastic_python_checkers = ['python', 'flake8', 'pylint']
 let g:syntastic_python_pep8_post_args = '--max-line-length=119'
 let g:syntastic_python_pylint_exe = '~/env/bin/pylint'
 let g:syntastic_python_pylint_post_args = '--rcfile=~/pylint.cfg'
@@ -737,7 +740,7 @@ nmap K <Plug>(devdocs-under-cursor)
 
 let g:tagbar_width = 80
 let g:tagbar_autofocus = 1
-let g:tagbar_autoclose = 1
+let g:tagbar_autoclose = 0
 let g:tagbar_sort = 0
 
 nmap <S-Tab> :TagbarToggle<CR>
@@ -746,7 +749,7 @@ nmap <S-Tab> :TagbarToggle<CR>
 " Gutentags configuration.
 "
 
-let g:gutentags_exclude = [
+let g:gutentags_ctags_exclude = [
             \ "node_modules",
             \ "bower_components",
             \ ]
